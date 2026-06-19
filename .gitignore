@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Uploads (media files)
+Back/uploads/images/*
+Back/uploads/videos/*
+Back/uploads/audios/*
+Back/uploads/documents/*
+Back/uploads/stickers/*
+Back/uploads/sessions/*
+!Back/uploads/**/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build output
+Front/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

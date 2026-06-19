@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: whatsapp-manager-mongo
+    restart: always
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=whatsapp-manager
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./Back
+      dockerfile: Dockerfile
+    container_name: whatsapp-manager-backend
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/whatsapp-manager
+      - JWT_SECRET=${JWT_SECRET:-clave_secreta_cambiar_en_produccion_123}
+      - JWT_EXPIRES_IN=7d
+      - NODE_ENV=production
+    volumes:
+      - uploads_data:/app/uploads
+      - sessions_data:/app/uploads/sessions
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./Front
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${API_URL:-http://localhost:3001}
+    container_name: whatsapp-manager-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+  uploads_data:
+  sessions_data:
+
+networks:
+  app-network:
+    driver: bridge

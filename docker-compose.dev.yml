@@ -1,0 +1,29 @@
+# Solo MongoDB para desarrollo local
+# Uso: docker-compose -f docker-compose.dev.yml up -d
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: whatsapp-manager-mongo-dev
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb_dev_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: whatsapp-manager-mongo-ui
+    restart: always
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=corelia2024
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_dev_data:
